@@ -5,7 +5,7 @@ Minimal Next.js application demonstrating Beforeprod preview deployments.
 ## Requirements
 
 - Node.js 20.9+
-- Beforeprod account with `BP_USER` and `BP_PASSWORD` credentials
+- Beforeprod alpha account with CI credentials
 
 ## Local Development
 
@@ -32,31 +32,32 @@ Beforeprod expects the build at port 4522, configured in `next.config.js` and `p
 
 ### Secrets Required
 
-Add this to your repository (Settings → Secrets and variables → Actions):
+This example's workflows use username/password authentication for CI detection and deployment. Add these to your repository (Settings → Secrets and variables → Actions):
 
 | Secret | Description |
 |--------|-------------|
-| `SHPR_TOKEN` | Beforeprod/Werft API token |
+| `BP_USER` | Beforeprod username |
+| `BP_PASSWORD` | Beforeprod password |
 
-The workflow writes `~/.werft` with the token before deploying. No username/password needed.
+Obtain credentials through the Beforeprod alpha onboarding process. Token-based authentication may be supported in other configurations; this example uses `BP_USER`/`BP_PASSWORD` as tested.
 
 ### Workflow Permissions
 
 Deploy workflow needs `pull-requests: write` for PR description updates.
 Cleanup workflow needs `pull-requests: read` to find the deployment URL.
 
+### Automatic PR Triggers
+
+The workflows automatically trigger on pull requests affecting files in `examples/nextjs-minimal/**`:
+
+- **Deploy:** Runs on `opened`, `synchronize`, `reopened`
+- **Cleanup:** Runs on `closed`
+
+Ensure secrets are configured before opening a PR.
+
 ### Action Reference
 
 This example uses [`beforeprod-com/preview-deployment-action`](https://github.com/beforeprod-com/preview-deployment-action) at commit `83d462340daea49fd9e6b16d88dc89bb64b95bf9` (shpr v0.0.43).
-
-## Enabling Automatic Deployments
-
-The workflows in `.github/workflows/` are configured for manual dispatch only by default.
-To enable automatic PR deployments:
-
-1. Uncomment the `pull_request` trigger in `nextjs-preview-deploy.yml`
-2. Uncomment the `pull_request` trigger in `nextjs-preview-cleanup.yml`
-3. Ensure secrets are configured
 
 ## Branch Marker
 

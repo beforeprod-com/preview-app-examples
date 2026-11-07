@@ -6,20 +6,20 @@ Runnable examples for deploying per-PR preview apps with [Beforeprod](https://be
 
 | Example | Framework | Status |
 |---------|-----------|--------|
-| [`examples/nextjs-minimal`](./examples/nextjs-minimal) | Next.js 16 + React 19 | Ready for verification |
+| [`examples/nextjs-minimal`](./examples/nextjs-minimal) | Next.js 16 + React 19 | Tested |
 
 ## Quick Start
 
 Each example includes:
 - Complete application source code
-- GitHub Actions workflow files (manual dispatch by default)
+- GitHub Actions workflow files with automatic PR triggers
 - Local development and build instructions
 - Documentation of required secrets and permissions
 
 ### Prerequisites
 
 - Node.js 20.9+ (for JS examples)
-- Beforeprod API token (`SHPR_TOKEN` secret)
+- Beforeprod alpha account with CI credentials (`BP_USER`, `BP_PASSWORD`)
 
 ### Local Testing
 
@@ -38,14 +38,14 @@ Examples use [`beforeprod-com/preview-deployment-action`](https://github.com/bef
 **Pinned commit:** `83d462340daea49fd9e6b16d88dc89bb64b95bf9`  
 **shpr version:** v0.0.43
 
-## Deployment Activation
+## Automatic PR Deployments
 
-Workflows are configured for `workflow_dispatch` (manual trigger) by default.
-To enable automatic PR deployments:
+Workflows trigger automatically on pull requests affecting example paths:
 
-1. Configure `SHPR_TOKEN` repository secret
-2. Uncomment the `pull_request` triggers in the workflow files
-3. Open a PR to trigger deployment
+- **Deploy:** On PR `opened`, `synchronize`, `reopened`
+- **Cleanup:** On PR `closed`
+
+Configure `BP_USER` and `BP_PASSWORD` repository secrets before opening a PR. Obtain credentials through the Beforeprod alpha onboarding process.
 
 ## License
 
