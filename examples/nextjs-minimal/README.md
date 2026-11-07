@@ -32,20 +32,13 @@ Beforeprod expects the build at port 4522, configured in `next.config.js` and `p
 
 ### Secrets Required
 
-Add these to your repository (Settings → Secrets and variables → Actions):
-
-**Option A: Token-based (recommended)**
+Add this to your repository (Settings → Secrets and variables → Actions):
 
 | Secret | Description |
 |--------|-------------|
-| `SHPR_TOKEN` | Beforeprod API token |
+| `SHPR_TOKEN` | Beforeprod/Werft API token |
 
-**Option B: Username/Password**
-
-| Secret | Description |
-|--------|-------------|
-| `BP_USER` | Beforeprod username |
-| `BP_PASSWORD` | Beforeprod password |
+The workflow writes `~/.werft` with the token before deploying. No username/password needed.
 
 ### Workflow Permissions
 
