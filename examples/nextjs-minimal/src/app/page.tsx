@@ -1,5 +1,6 @@
 export default function Home() {
   const branchMarker = process.env.BRANCH_MARKER || 'local-dev'
+  const testMarker = 'EVIDENCE-RUN-A-20261107'
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
@@ -10,6 +11,9 @@ export default function Home() {
         <p className="text-xl text-gray-600 mb-8">
           Minimal app for Beforeprod preview deployments
         </p>
+        <div className="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-4 mb-4 border-2 border-yellow-400">
+          <p className="text-sm font-mono">{testMarker}</p>
+        </div>
 
         <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mb-8">
           <p className="text-sm text-gray-500 mb-2">Branch marker:</p>
