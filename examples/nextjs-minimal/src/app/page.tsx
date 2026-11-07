@@ -1,6 +1,6 @@
 export default function Home() {
   const branchMarker = process.env.BRANCH_MARKER || 'local-dev'
-  const testMarker = 'EVIDENCE-RUN-A-20261107'
+  const testMarker = 'EVIDENCE-RUN-B-20261107'
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
