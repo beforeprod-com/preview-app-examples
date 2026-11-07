@@ -1,0 +1,73 @@
+# Next.js Preview Deployment Workflow
+#
+# DEPLOYMENT GATED: This workflow uses workflow_dispatch only.
+# To enable automatic PR deployments, uncomment the pull_request trigger below.
+#
+# Authentication (Settings → Secrets and variables → Actions):
+#   Option A: SHPR_TOKEN - Beforeprod API token (recommended)
+#   Option B: BP_USER + BP_PASSWORD - Beforeprod username and password
+#
+# Required permissions: pull-requests: write (for PR description updates)
+
+name: Next.js Preview Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_branch:
+        description: 'Branch to deploy (defaults to current branch)'
+        required: false
+        type: string
+
+  # UNCOMMENT BELOW TO ENABLE AUTOMATIC PR DEPLOYMENTS:
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
+  #   paths:
+  #     - 'examples/nextjs-minimal/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+defaults:
+  run:
+    working-directory: examples/nextjs-minimal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: examples/nextjs-minimal/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build
+
+      - name: Deploy to Beforeprod
+        uses: beforeprod-com/preview-deployment-action@83d462340daea49fd9e6b16d88dc89bb64b95bf9
+        id: beforeprod
+        with:
+          build_folder: './examples/nextjs-minimal'
+          platform: 'JS'
+        env:
+          SHPR_TOKEN: ${{ secrets.SHPR_TOKEN }}
+          BP_USER: ${{ secrets.BP_USER }}
+          BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
+
+      - name: Output deployment URL
+        run: |
+          echo "Deployment URL: ${{ steps.beforeprod.outputs.url }}"
+          echo "Deployment time: ${{ steps.beforeprod.outputs.time }}"
