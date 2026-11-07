@@ -1,10 +1,8 @@
 # Next.js Preview Deployment Workflow
 #
-# DEPLOYMENT GATED: This workflow uses workflow_dispatch only.
-# To enable automatic PR deployments, uncomment the pull_request trigger below.
-#
 # Authentication (Settings → Secrets and variables → Actions):
-#   SHPR_TOKEN - Beforeprod/Werft API token (writes .werft config before deploy)
+#   BP_USER     - Beforeprod username
+#   BP_PASSWORD - Beforeprod password
 #
 # Required permissions: pull-requests: write (for PR description updates)
 
@@ -18,11 +16,11 @@ on:
         required: false
         type: string
 
-  # UNCOMMENT BELOW TO ENABLE AUTOMATIC PR DEPLOYMENTS:
-  # pull_request:
-  #   types: [opened, synchronize, reopened]
-  #   paths:
-  #     - 'examples/nextjs-minimal/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'examples/nextjs-minimal/**'
+      - '.github/workflows/nextjs-preview-deploy.yml'
 
 permissions:
   contents: read
@@ -55,17 +53,15 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Configure Beforeprod auth
-        run: jq -n --arg token "$SHPR_TOKEN" '{token:$token}' > ~/.werft
-        env:
-          SHPR_TOKEN: ${{ secrets.SHPR_TOKEN }}
-
       - name: Deploy to Beforeprod
         uses: beforeprod-com/preview-deployment-action@83d462340daea49fd9e6b16d88dc89bb64b95bf9
         id: beforeprod
         with:
           build_folder: './examples/nextjs-minimal'
           platform: 'JS'
+        env:
+          BP_USER: ${{ secrets.BP_USER }}
+          BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
 
       - name: Output deployment URL
         run: |

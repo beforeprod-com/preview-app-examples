@@ -1,10 +1,8 @@
 # Next.js Preview Cleanup Workflow
 #
-# CLEANUP GATED: This workflow uses workflow_dispatch only.
-# To enable automatic cleanup on PR close, uncomment the pull_request trigger below.
-#
 # Authentication (Settings → Secrets and variables → Actions):
-#   SHPR_TOKEN - Beforeprod/Werft API token (writes .werft config before cleanup)
+#   BP_USER     - Beforeprod username
+#   BP_PASSWORD - Beforeprod password
 #
 # Required permissions: pull-requests: read (to read PR description for deployment URL)
 
@@ -18,11 +16,11 @@ on:
         required: true
         type: number
 
-  # UNCOMMENT BELOW TO ENABLE AUTOMATIC CLEANUP ON PR CLOSE:
-  # pull_request:
-  #   types: [closed]
-  #   paths:
-  #     - 'examples/nextjs-minimal/**'
+  pull_request:
+    types: [closed]
+    paths:
+      - 'examples/nextjs-minimal/**'
+      - '.github/workflows/nextjs-preview-cleanup.yml'
 
 permissions:
   contents: read
@@ -35,12 +33,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Configure Beforeprod auth
-        run: jq -n --arg token "$SHPR_TOKEN" '{token:$token}' > ~/.werft
-        env:
-          SHPR_TOKEN: ${{ secrets.SHPR_TOKEN }}
-
       - name: Cleanup deployment
         uses: beforeprod-com/preview-deployment-action@83d462340daea49fd9e6b16d88dc89bb64b95bf9
         with:
           action: cleanup
+        env:
+          BP_USER: ${{ secrets.BP_USER }}
+          BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
