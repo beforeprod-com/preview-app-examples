@@ -19,9 +19,7 @@ Each example includes:
 ### Prerequisites
 
 - Node.js 20.9+ (for JS examples)
-- Beforeprod account credentials:
-  - **Option A:** `SHPR_TOKEN` (API token, recommended)
-  - **Option B:** `BP_USER` + `BP_PASSWORD` (username/password)
+- Beforeprod API token (`SHPR_TOKEN` secret)
 
 ### Local Testing
 
@@ -45,7 +43,7 @@ Examples use [`beforeprod-com/preview-deployment-action`](https://github.com/bef
 Workflows are configured for `workflow_dispatch` (manual trigger) by default.
 To enable automatic PR deployments:
 
-1. Configure repository secrets (`BP_USER`, `BP_PASSWORD`)
+1. Configure `SHPR_TOKEN` repository secret
 2. Uncomment the `pull_request` triggers in the workflow files
 3. Open a PR to trigger deployment
 
